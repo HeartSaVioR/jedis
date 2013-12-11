@@ -38,9 +38,9 @@
 	</issueManagement>
 
   <scm>
-    <connection>scm:git:git@github.com:heartsavior/jedis.git</connection>
-    <url>scm:git:git@github.com:heartsavior/jedis.git</url>
-    <developerConnection>scm:git:git@github.com:heartsavior/jedis.git</developerConnection>
+    <connection>scm:git:git@github.com:HeartSaVioR/jedis.git</connection>
+    <url>scm:git:git@github.com:HeartSaVioR/jedis.git</url>
+    <developerConnection>scm:git:git@github.com:HeartSaVioR/jedis.git</developerConnection>
     <tag>jedis-2.2.1.1</tag>
   </scm>
 
@@ -71,7 +71,7 @@
       <repository>
           <id>github</id>
           <name>GitHub ${project.artifactId} Repository</name>
-          <url>https://raw.github.com/heartsavior/${project.artifactId}/mvn-repo</url>
+          <url>https://raw.github.com/HeartSaVioR/${project.artifactId}/mvn-repo</url>
       </repository>
   </distributionManagement>
 
