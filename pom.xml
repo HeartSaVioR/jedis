@@ -41,7 +41,7 @@
     <connection>scm:git:git@github.com:heartsavior/jedis.git</connection>
     <url>scm:git:git@github.com:heartsavior/jedis.git</url>
     <developerConnection>scm:git:git@github.com:heartsavior/jedis.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>jedis-2.2.1.1</tag>
   </scm>
 
 	<properties>
