@@ -1,10 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 apply plugin: 'eclipse'
 
-group = 'com.googlecode.jedis'
+group = 'net.heartsavior'
 archiveBaseName = 'jedis'
-version = '1.5.0'
+version = '2.2.1.1'
 
 repositories {
    mavenCentral()
@@ -15,6 +16,59 @@ dependencies {
     compile 'org.apache.commons:commons-pool2:2.0'
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+              authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+               name 'jedis'
+               packaging 'jar'
+               description 'Jedis is a blazingly small and sane Redis java client.'
+               url 'http://github.com/xetorthio/jedis'
+
+               scm {
+                   url 'scm:git@github.com:HeartSaVioR/jedis.git'
+                   connection 'scm:git@github.com:HeartSaVioR/jedis.git'
+                   developerConnection 'scm:git@github.com:HeartSaVioR/jedis.git'
+               }
+
+               licenses {
+                   license {
+                       name 'MIT'
+                       url 'http://github.com/xetorthio/jedis/raw/master/LICENSE.txt'
+                       distribution 'repo'
+                   }
+               }
+           }
+        }
+    }
+}
 
 /*
 TODO: Customize for deployment
