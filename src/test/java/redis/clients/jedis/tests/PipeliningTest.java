@@ -37,8 +37,8 @@ public class PipeliningTest extends Assert {
     public void pipeline() throws UnsupportedEncodingException {
         List<Object> results = jedis.pipelined(new PipelineBlock() {
             public void execute() {
-                set("foo", "bar");
-                get("foo");
+                pipeline.set("foo", "bar");
+                pipeline.get("foo");
             }
         });
 

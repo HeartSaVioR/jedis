@@ -75,9 +75,9 @@ public class TransactionCommandsTest extends JedisCommandTestBase {
 	List<Object> response = jedis.multi(new TransactionBlock() {
 	    @Override
 	    public void execute() {
-		sadd("foo", "a");
-		sadd("foo", "b");
-		scard("foo");
+			transaction.sadd("foo", "a");
+			transaction.sadd("foo", "b");
+			transaction.scard("foo");
 	    }
 	});
 
@@ -91,9 +91,9 @@ public class TransactionCommandsTest extends JedisCommandTestBase {
 	response = jedis.multi(new TransactionBlock() {
 	    @Override
 	    public void execute() {
-		sadd(bfoo, ba);
-		sadd(bfoo, bb);
-		scard(bfoo);
+	    	transaction.sadd(bfoo, ba);
+	    	transaction.sadd(bfoo, bb);
+	    	transaction.scard(bfoo);
 	    }
 	});
 

@@ -2,17 +2,20 @@ package redis.clients.jedis;
 
 import redis.clients.jedis.exceptions.JedisException;
 
-public abstract class TransactionBlock extends Transaction {
-    public TransactionBlock(Client client) {
-	super(client);
+public abstract class TransactionBlock {
+	
+	protected Transaction transaction;
+	
+    public TransactionBlock(Transaction trans) {
+    	this.transaction = trans; 
     }
 
     public TransactionBlock() {
     }
 
     public abstract void execute() throws JedisException;
-
-    public void setClient(Client client) {
-	    this.client = client;
+    
+    public void setTransaction(Transaction trans) {
+	    this.transaction = trans;
     }
 }

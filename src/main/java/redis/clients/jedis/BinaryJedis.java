@@ -1685,14 +1685,15 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
 
     public List<Object> multi(final TransactionBlock jedisTransaction) {
 	List<Object> results = null;
-	jedisTransaction.setClient(client);
+	Transaction transaction = new Transaction(client);
+	jedisTransaction.setTransaction(transaction);
 	try {
 	    client.multi();
 	    client.getOne();	// expected OK
 	    jedisTransaction.execute();
-	    results = jedisTransaction.exec();
+	    results = transaction.exec();
 	} catch (Exception ex) {
-	    jedisTransaction.discard();
+		transaction.discard();
 	}
 	return results;
     }
@@ -2116,9 +2117,11 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
      * @return The results of the command in the same order you've run them.
      */
     public List<Object> pipelined(final PipelineBlock jedisPipeline) {
-	jedisPipeline.setClient(client);
-	jedisPipeline.execute();
-	return jedisPipeline.syncAndReturnAll();
+    	Pipeline pipeline = new Pipeline();
+    	pipeline.setClient(client);
+    	jedisPipeline.setPipeline(pipeline);
+    	jedisPipeline.execute();
+    	return pipeline.syncAndReturnAll();
     }
 
     public Pipeline pipelined() {
