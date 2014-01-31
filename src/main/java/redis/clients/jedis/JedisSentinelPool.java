@@ -99,10 +99,10 @@ public class JedisSentinelPool extends Pool<Jedis> {
 
     private void initPool(HostAndPort master) {
 	if (!master.equals(currentHostMaster)) {
-	    currentHostMaster = master;
-	    log.info("Created JedisPool to master at " + master);
 	    initPool(poolConfig, new JedisFactory(master.getHost(), master.getPort(),
 		    timeout, password, database));
+	    currentHostMaster = master;
+	    log.info("Created JedisPool to master at " + master);
 	}
     }
 

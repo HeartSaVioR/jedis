@@ -38,15 +38,24 @@ public abstract class Pool<T> {
     public T getResource() {
 	try {
 	    return internalPool.borrowObject();
+	} catch (InterruptedException e) {
+	    waitForPoolAvailable();
+	    return getResponseWithSimpleException();
+	} catch (IllegalStateException e) {
+	    waitForPoolAvailable();
+	    return getResponseWithSimpleException();
 	} catch (Exception e) {
 	    throw new JedisConnectionException(
 		    "Could not get a resource from the pool", e);
 	}
     }
 
+    // FIXME: How about we change method access to protected?
     public void returnResourceObject(final T resource) {
 	try {
 	    internalPool.returnObject(resource);
+	} catch (IllegalStateException e) {
+		// is object managed from previous pool?
 	} catch (Exception e) {
 	    throw new JedisException(
 		    "Could not return the resource to the pool", e);
@@ -68,6 +77,8 @@ public abstract class Pool<T> {
     protected void returnBrokenResourceObject(final T resource) {
 	try {
 	    internalPool.invalidateObject(resource);
+	} catch (IllegalStateException e) {
+		// is object managed from previous pool?
 	} catch (Exception e) {
 	    throw new JedisException(
 		    "Could not return the resource to the pool", e);
@@ -81,4 +92,29 @@ public abstract class Pool<T> {
 	    throw new JedisException("Could not destroy the pool", e);
 	}
     }
+    
+    private T getResponseWithSimpleException() {
+    try {
+        return internalPool.borrowObject();
+    } catch (Exception e) {
+        throw new JedisConnectionException(
+        	    "Could not get a resource from the pool", e);
+    }
+    }
+    
+    private void waitForPoolAvailable() {
+    while (internalPool.isClosed()) {
+        try {
+    	    Thread.sleep(100);
+        } catch (InterruptedException e1) {
+        }
+    }
+
+    // sleep a bit more
+    try {
+        Thread.sleep(100);
+    } catch (InterruptedException e1) {
+    }
+    }
+
 }

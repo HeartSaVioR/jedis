@@ -185,6 +185,8 @@ stop:
 	rm -f /tmp/redis_cluster_node1.conf
 	rm -f /tmp/redis_cluster_node2.conf
 	rm -f /tmp/redis_cluster_node3.conf
+	rm -f dump.rdb
+	rm -f appendonly.aof
 
 test:
 	make start
