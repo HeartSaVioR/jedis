@@ -3,7 +3,7 @@ package redis.clients.jedis.async;
 import redis.clients.jedis.*;
 import redis.clients.jedis.async.callback.AsyncResponseCallback;
 import redis.clients.jedis.async.commands.*;
-import redis.clients.jedis.async.process.AsyncDispatcher;
+import redis.clients.jedis.async.process.AsyncJedisDispatcher;
 import redis.clients.jedis.async.process.AsyncJedisTask;
 import redis.clients.jedis.async.request.RequestBuilder;
 import redis.clients.jedis.async.request.RequestParameterBuilder;
@@ -21,41 +21,25 @@ import static redis.clients.jedis.Protocol.toByteArray;
 public class AsyncBinaryJedis implements AsyncBasicCommands, AsyncBinaryJedisCommands,
     AsyncMultiKeyBinaryCommands, AsyncAdvancedBinaryJedisCommands, AsyncBinaryScriptingCommands,
     Closeable {
-  public static final int BUFFER_SIZE = 8192;
-
-  protected final AsyncDispatcher processor;
+  protected final AsyncJedisDispatcher processor;
 
   public AsyncBinaryJedis(String host) throws IOException {
-    Connection connection = new Connection(host);
-    processor = new AsyncDispatcher(connection, BUFFER_SIZE);
-    processor.start();
+    this(host, Protocol.DEFAULT_PORT);
   }
 
   public AsyncBinaryJedis(String host, int port) throws IOException {
-    Connection connection = new Connection(host, port);
-    processor = new AsyncDispatcher(connection, BUFFER_SIZE);
+    processor = new AsyncJedisDispatcher(host, port);
     processor.start();
   }
 
   public AsyncBinaryJedis(String host, int port, String password) throws IOException {
-    Connection connection = new Connection(host, port);
-    processor = new AsyncDispatcher(connection, BUFFER_SIZE);
-    processor.setPassword(password);
+    processor = new AsyncJedisDispatcher(host, port, password);
     processor.start();
   }
 
   @Override
   public void close() throws IOException {
-    try {
-      stop();
-    } catch (InterruptedException e) {
-      // pass
-    }
-  }
-
-  public void stop() throws InterruptedException {
-    processor.setShutdown(true);
-    processor.join();
+    processor.stop();
   }
 
   // keys section

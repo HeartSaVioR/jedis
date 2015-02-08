@@ -46,9 +46,9 @@ public abstract class AsyncJedisCommandTestBase extends JedisCommandTestBase {
     super.tearDown();
 
     try {
-      asyncJedis.stop();
-    } catch (InterruptedException e) {
-      // FIXME : pass or fail?
+      asyncJedis.close();
+    } catch (IOException e) {
+      // close quietly
     }
   }
 

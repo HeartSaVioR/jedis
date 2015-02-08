@@ -2,18 +2,12 @@ package redis.clients.jedis.async.process;
 
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.async.callback.AsyncResponseCallback;
-import redis.clients.jedis.async.response.BasicResponseBuilder;
 import redis.clients.jedis.exceptions.JedisException;
-
-import java.nio.ByteBuffer;
 
 public class AsyncJedisTask {
   private final byte[] request;
 
-  private int writtenIndex = 0;
-
   private final AsyncResponseCallback callback;
-  private BasicResponseBuilder responseBuilder;
   private Builder responseTypeConverter;
 
   public AsyncJedisTask(byte[] request, AsyncResponseCallback callback) {
@@ -40,31 +34,8 @@ public class AsyncJedisTask {
     return callback;
   }
 
-  public int getWrittenIndex() {
-    return writtenIndex;
-  }
-
-  public void setWrittenIndex(int writtenIndex) {
-    this.writtenIndex = writtenIndex;
-  }
-
-  public <T> void initializeResponseBuilder() {
-    responseBuilder = new BasicResponseBuilder<T>();
-  }
-
-  public void appendPartialResponse(final ByteBuffer buffer) {
-    getResponseBuilder().appendPartialResponse(buffer);
-  }
-
-  public boolean isReadComplete() {
-    return getResponseBuilder().isComplete();
-  }
-
-  public void callback() {
-    BasicResponseBuilder responseBuilder = getResponseBuilder();
+  public void callback(Object response, JedisException exception) {
     Builder responseTypeConverter = getResponseTypeConverter();
-    Object response = responseBuilder.getResponse();
-    JedisException exception = responseBuilder.getException();
 
     try {
       if (responseTypeConverter != null && exception == null) {
@@ -78,11 +49,4 @@ public class AsyncJedisTask {
 
   }
 
-  public BasicResponseBuilder getResponseBuilder() {
-    if (responseBuilder == null) {
-      initializeResponseBuilder();
-    }
-
-    return responseBuilder;
-  }
 }

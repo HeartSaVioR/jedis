@@ -20,9 +20,16 @@ public class AsyncGetSetBenchmark {
   public static void main(String[] args) throws UnknownHostException, IOException,
       InterruptedException {
     AsyncJedis jedis = new AsyncJedis(hnp.getHost(), hnp.getPort(), "foobared");
-    AsyncJUnitTestCallback<String> callback = new AsyncJUnitTestCallback<String>();
-    jedis.flushAll(callback);
-    callback.getResponseWithWaiting(10000);
+
+    try {
+      AsyncJUnitTestCallback<String> callback = new AsyncJUnitTestCallback<String>();
+      jedis.flushAll(callback);
+      callback.getResponseWithWaiting(10000);
+    } catch (JedisException e) {
+      System.err.println("Exception while cleaning DB, exc: " + e);
+      jedis.close();
+      return;
+    }
 
     long begin = Calendar.getInstance().getTimeInMillis();
 
@@ -53,6 +60,7 @@ public class AsyncGetSetBenchmark {
       if (exc != null) {
         System.err.println("Exception occurred : " + exc);
       } else {
+        // System.out.println("response: " + response);
         count.incrementAndGet();
       }
     }
