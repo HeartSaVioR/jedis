@@ -89,10 +89,6 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
         hostnameVerifier);
   }
 
-  public Jedis(JedisShardInfo shardInfo) {
-    super(shardInfo);
-  }
-
   public Jedis(URI uri) {
     super(uri);
   }
