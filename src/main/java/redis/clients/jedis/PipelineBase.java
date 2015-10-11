@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
-import redis.clients.jedis.commands.BinaryRedisPipeline;
+import redis.clients.jedis.commands.PipelineBinaryJedisCommands;
+import redis.clients.jedis.commands.PipelineJedisCommands;
 import redis.clients.jedis.params.set.SetParams;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
 
-public abstract class PipelineBase extends Queable implements BinaryRedisPipeline, RedisPipeline {
+public abstract class PipelineBase extends Queable implements PipelineBinaryJedisCommands,
+    PipelineJedisCommands {
 
   protected abstract Client getClient(String key);
 

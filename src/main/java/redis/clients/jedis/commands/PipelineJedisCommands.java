@@ -1,5 +1,9 @@
-package redis.clients.jedis;
+package redis.clients.jedis.commands;
 
+import redis.clients.jedis.BinaryClient;
+import redis.clients.jedis.Response;
+import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.Tuple;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
 
@@ -7,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface RedisPipeline {
+public interface PipelineJedisCommands {
   Response<Long> append(String key, String value);
 
   Response<List<String>> blpop(String arg);
