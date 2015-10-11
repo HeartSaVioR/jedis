@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class MultiKeyPipelineBase extends PipelineBase implements
-    MultiKeyBinaryRedisPipeline, MultiKeyCommandsPipeline, ClusterPipeline,
-    BinaryScriptingCommandsPipeline, ScriptingCommandsPipeline, BasicRedisPipeline {
+    PipelineBasicCommands, PipelineMultiKeyBinaryCommands, PipelineMultiKeyCommands,
+    PipelineClusterCommands, PipelineBinaryScriptingCommands, PipelineScriptingCommands {
 
   protected Client client = null;
 
@@ -292,26 +292,6 @@ public abstract class MultiKeyPipelineBase extends PipelineBase implements
     return getResponse(BuilderFactory.LONG);
   }
 
-  public Response<String> bgrewriteaof() {
-    client.bgrewriteaof();
-    return getResponse(BuilderFactory.STRING);
-  }
-
-  public Response<String> bgsave() {
-    client.bgsave();
-    return getResponse(BuilderFactory.STRING);
-  }
-
-  public Response<List<String>> configGet(String pattern) {
-    client.configGet(pattern);
-    return getResponse(BuilderFactory.STRING_LIST);
-  }
-
-  public Response<String> configSet(String parameter, String value) {
-    client.configSet(parameter, value);
-    return getResponse(BuilderFactory.STRING);
-  }
-
   public Response<String> brpoplpush(String source, String destination, int timeout) {
     client.brpoplpush(source, destination, timeout);
     return getResponse(BuilderFactory.STRING);
@@ -322,19 +302,46 @@ public abstract class MultiKeyPipelineBase extends PipelineBase implements
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
+  public Response<List<String>> configGet(String pattern) {
+    client.configGet(pattern);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  @Override
+  public Response<String> configSet(String parameter, String value) {
+    client.configSet(parameter, value);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
   public Response<String> configResetStat() {
     client.configResetStat();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> save() {
     client.save();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> lastsave() {
     client.lastsave();
     return getResponse(BuilderFactory.LONG);
+  }
+
+  @Override
+  public Response<String> bgrewriteaof() {
+    client.bgrewriteaof();
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<String> bgsave() {
+    client.bgsave();
+    return getResponse(BuilderFactory.STRING);
   }
 
   public Response<Long> publish(String channel, String message) {
@@ -377,21 +384,25 @@ public abstract class MultiKeyPipelineBase extends PipelineBase implements
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> dbSize() {
     client.dbSize();
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> shutdown() {
     client.shutdown();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> ping() {
     client.ping();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> select(int index) {
     client.select(index);
     Response<String> response = getResponse(BuilderFactory.STRING);
@@ -562,7 +573,6 @@ public abstract class MultiKeyPipelineBase extends PipelineBase implements
   public Response<String> moduleLoad(String path) {
     client.moduleLoad(path);
     return getResponse(BuilderFactory.STRING);
-  }  
-  
-  
+  }
+
 }
