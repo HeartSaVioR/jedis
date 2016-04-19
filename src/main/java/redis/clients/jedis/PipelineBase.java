@@ -1,7 +1,5 @@
 package redis.clients.jedis;
 
-import static redis.clients.jedis.Protocol.toByteArray;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -864,7 +862,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Long> zadd(byte[] key, double score, byte[] member, ZAddParams params) {
-    getClient().zadd(key, score, member);
+    getClient().zadd(key, score, member, params);
     return getResponse(BuilderFactory.LONG);
   }
 
@@ -905,7 +903,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Long> zcount(byte[] key, double min, double max) {
-    getClient().zcount(key, toByteArray(min), toByteArray(max));
+    getClient().zcount(key, min, max);
     return getResponse(BuilderFactory.LONG);
   }
 
@@ -934,7 +932,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Double> zincrby(byte[] key, double score, byte[] member, ZIncrByParams params) {
-    getClient().zincrby(key, score, member);
+    getClient().zincrby(key, score, member, params);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
@@ -958,7 +956,8 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Set<byte[]>> zrangeByScore(byte[] key, double min, double max) {
-    return zrangeByScore(key, toByteArray(min), toByteArray(max));
+    getClient().zrangeByScore(key, min, max);
+    return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
   @Override
@@ -989,7 +988,8 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
   @Override
   public Response<Set<byte[]>> zrangeByScore(byte[] key, double min, double max, int offset,
       int count) {
-    return zrangeByScore(key, toByteArray(min), toByteArray(max), offset, count);
+    getClient().zrangeByScore(key, min, max, offset, count);
+    return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
   @Override
@@ -1012,7 +1012,8 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, double min, double max) {
-    return zrangeByScoreWithScores(key, toByteArray(min), toByteArray(max));
+    getClient().zrangeByScoreWithScores(key, min, max);
+    return getResponse(BuilderFactory.TUPLE_ZSET_BINARY);
   }
 
   @Override
@@ -1037,7 +1038,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
   @Override
   public Response<Set<Tuple>> zrangeByScoreWithScores(byte[] key, double min, double max,
       int offset, int count) {
-    getClient().zrangeByScoreWithScores(key, toByteArray(min), toByteArray(max), offset, count);
+    getClient().zrangeByScoreWithScores(key, min, max, offset, count);
     return getResponse(BuilderFactory.TUPLE_ZSET_BINARY);
   }
 
@@ -1056,7 +1057,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Set<byte[]>> zrevrangeByScore(byte[] key, double max, double min) {
-    getClient().zrevrangeByScore(key, toByteArray(max), toByteArray(min));
+    getClient().zrevrangeByScore(key, max, min);
     return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
@@ -1088,7 +1089,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
   @Override
   public Response<Set<byte[]>> zrevrangeByScore(byte[] key, double max, double min, int offset,
       int count) {
-    getClient().zrevrangeByScore(key, toByteArray(max), toByteArray(min), offset, count);
+    getClient().zrevrangeByScore(key, max, min, offset, count);
     return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
@@ -1112,7 +1113,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key, double max, double min) {
-    getClient().zrevrangeByScoreWithScores(key, toByteArray(max), toByteArray(min));
+    getClient().zrevrangeByScoreWithScores(key, max, min);
     return getResponse(BuilderFactory.TUPLE_ZSET_BINARY);
   }
 
@@ -1138,8 +1139,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
   @Override
   public Response<Set<Tuple>> zrevrangeByScoreWithScores(byte[] key, double max, double min,
       int offset, int count) {
-    getClient().zrevrangeByScoreWithScores(key, toByteArray(max), toByteArray(min), offset,
-      count);
+    getClient().zrevrangeByScoreWithScores(key, max, min, offset, count);
     return getResponse(BuilderFactory.TUPLE_ZSET_BINARY);
   }
 
@@ -1211,7 +1211,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Long> zremrangeByScore(byte[] key, double start, double end) {
-    getClient().zremrangeByScore(key, toByteArray(start), toByteArray(end));
+    getClient().zremrangeByScore(key, start, end);
     return getResponse(BuilderFactory.LONG);
   }
 
@@ -1860,7 +1860,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
   }
 
   public Response<byte[]> randomKeyBinary() {
-    getClient().randomKey();
+    getClient().randomKeyBinary();
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
@@ -1956,7 +1956,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   @Override
   public Response<Double> geodist(String key, String member1, String member2, GeoUnit unit) {
-    getClient().geodist(key, member1, member2);
+    getClient().geodist(key, member1, member2, unit);
     return getResponse(BuilderFactory.DOUBLE);
   }
 

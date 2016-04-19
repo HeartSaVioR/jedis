@@ -230,6 +230,6 @@ public class ScriptingCommandsTest extends JedisCommandTestBase {
   }
 
   private <T> Matcher<Iterable<? super T>> listWithItem(T expected) {
-    return CoreMatchers.<T> hasItem(equalTo(expected));
+    return CoreMatchers.<T>hasItem(equalTo(expected));
   }
 }
