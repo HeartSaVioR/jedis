@@ -30,34 +30,26 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
   }
 
   @Override
-  public Response<List<String>> blpop(String key) {
-    String[] temp = new String[1];
-    temp[0] = key;
-    getClient().blpop(temp);
+  public Response<List<String>> blpop(int timeout, String key) {
+    getClient().blpop(timeout, key);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
   @Override
-  public Response<List<String>> brpop(String key) {
-    String[] temp = new String[1];
-    temp[0] = key;
-    getClient().brpop(temp);
+  public Response<List<String>> brpop(int timeout, String key) {
+    getClient().brpop(timeout, key);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
   @Override
-  public Response<List<byte[]>> blpop(byte[] key) {
-    byte[][] temp = new byte[1][];
-    temp[0] = key;
-    getClient().blpop(temp);
+  public Response<List<byte[]>> blpop(int timeout, byte[] key) {
+    getClient().blpop(timeout, key);
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
   @Override
-  public Response<List<byte[]>> brpop(byte[] key) {
-    byte[][] temp = new byte[1][];
-    temp[0] = key;
-    getClient().brpop(temp);
+  public Response<List<byte[]>> brpop(int timeout, byte[] key) {
+    getClient().brpop(timeout, key);
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
@@ -1544,29 +1536,19 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.STRING_MAP);
   }
 
-  public Response<List<byte[]>> brpop(byte[]... args) {
-    getClient().brpop(args);
-    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
-  }
-
-  public Response<List<String>> brpop(int timeout, byte[]... keys) {
+  public Response<List<byte[]>> brpop(int timeout, byte[]... keys) {
     getClient().brpop(timeout, keys);
-    return getResponse(BuilderFactory.STRING_LIST);
+    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
   public Response<Map<String, String>> brpopMap(int timeout, String... keys) {
-    getClient().blpop(timeout, keys);
+    getClient().brpop(timeout, keys);
     return getResponse(BuilderFactory.STRING_MAP);
   }
 
-  public Response<List<byte[]>> blpop(byte[]... args) {
-    getClient().blpop(args);
-    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
-  }
-
-  public Response<List<String>> blpop(int timeout, byte[]... keys) {
+  public Response<List<byte[]>> blpop(int timeout, byte[]... keys) {
     getClient().blpop(timeout, keys);
-    return getResponse(BuilderFactory.STRING_LIST);
+    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
   public Response<Long> del(String... keys) {

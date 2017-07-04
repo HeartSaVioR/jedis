@@ -1811,30 +1811,6 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return args;
   }
 
-  @Override
-  public List<String> blpop(String... args) {
-    checkIsInMultiOrPipeline();
-    client.blpop(args);
-    client.setTimeoutInfinite();
-    try {
-      return client.getMultiBulkReply();
-    } finally {
-      client.rollbackTimeout();
-    }
-  }
-
-  @Override
-  public List<String> brpop(String... args) {
-    checkIsInMultiOrPipeline();
-    client.brpop(args);
-    client.setTimeoutInfinite();
-    try {
-      return client.getMultiBulkReply();
-    } finally {
-      client.rollbackTimeout();
-    }
-  }
-
   /**
    * Sort a Set or a List accordingly to the specified parameters and store the result at dstkey.
    * @see #sort(String, SortingParams)
@@ -3569,6 +3545,28 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     checkIsInMultiOrPipeline();
     client.hstrlen(key, field);
     return client.getIntegerReply();
+  }
+
+  private List<String> blpop(String... args) {
+    checkIsInMultiOrPipeline();
+    client.blpop(args);
+    client.setTimeoutInfinite();
+    try {
+      return client.getMultiBulkReply();
+    } finally {
+      client.rollbackTimeout();
+    }
+  }
+
+  private List<String> brpop(String... args) {
+    checkIsInMultiOrPipeline();
+    client.brpop(args);
+    client.setTimeoutInfinite();
+    try {
+      return client.getMultiBulkReply();
+    } finally {
+      client.rollbackTimeout();
+    }
   }
 
 }
