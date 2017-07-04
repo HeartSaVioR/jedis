@@ -77,7 +77,7 @@ public class BinaryClient extends Connection {
   public boolean isInWatch() {
     return isInWatch;
   }
-  
+
   private byte[][] joinParameters(byte[] first, byte[][] rest) {
     byte[][] result = new byte[rest.length + 1][];
     result[0] = first;
@@ -933,6 +933,10 @@ public class BinaryClient extends Connection {
 
   public void getbit(byte[] key, long offset) {
     sendCommand(GETBIT, key, toByteArray(offset));
+  }
+
+  public void bitpos(final byte[] key, final boolean value) {
+    bitpos(key, value, new BitPosParams());
   }
 
   public void bitpos(final byte[] key, final boolean value, final BitPosParams params) {

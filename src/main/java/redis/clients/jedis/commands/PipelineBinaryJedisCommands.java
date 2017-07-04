@@ -3,6 +3,7 @@ package redis.clients.jedis.commands;
 import redis.clients.jedis.*;
 
 import redis.clients.jedis.params.geo.GeoRadiusParam;
+import redis.clients.jedis.params.set.SetParams;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
 
@@ -39,6 +40,10 @@ public interface PipelineBinaryJedisCommands {
 
   Response<Boolean> getbit(byte[] key, long offset);
 
+  Response<Long> bitpos(final byte[] key, final boolean value);
+
+  Response<Long> bitpos(final byte[] key, final boolean value, final BitPosParams params);
+
   Response<byte[]> getSet(byte[] key, byte[] value);
 
   Response<byte[]> getrange(byte[] key, long startOffset, long endOffset);
@@ -52,6 +57,8 @@ public interface PipelineBinaryJedisCommands {
   Response<Map<byte[], byte[]>> hgetAll(byte[] key);
 
   Response<Long> hincrBy(byte[] key, byte[] field, long value);
+
+  Response<Double> hincrByFloat(byte[] key, byte[] field, double increment);
 
   Response<Set<byte[]>> hkeys(byte[] key);
 
@@ -70,6 +77,8 @@ public interface PipelineBinaryJedisCommands {
   Response<Long> incr(byte[] key);
 
   Response<Long> incrBy(byte[] key, long integer);
+
+  Response<Double> incrByFloat(byte[] key, double increment);
 
   Response<byte[]> lindex(byte[] key, long index);
 
@@ -107,11 +116,15 @@ public interface PipelineBinaryJedisCommands {
 
   Response<String> set(byte[] key, byte[] value);
 
+  Response<String> set(String key, String value, SetParams params);
+
   Response<Boolean> setbit(byte[] key, long offset, byte[] value);
 
   Response<Long> setrange(byte[] key, long offset, byte[] value);
 
   Response<String> setex(byte[] key, int seconds, byte[] value);
+
+  Response<String> psetex(byte[] key, long milliseconds, byte[] value);
 
   Response<Long> setnx(byte[] key, byte[] value);
 
@@ -138,6 +151,8 @@ public interface PipelineBinaryJedisCommands {
   Response<String> substr(byte[] key, int start, int end);
 
   Response<Long> ttl(byte[] key);
+
+  Response<Long> pttl(byte[] key);
 
   Response<String> type(byte[] key);
 
@@ -330,4 +345,16 @@ public interface PipelineBinaryJedisCommands {
   Response<String> pfmerge(final byte[] destkey, final byte[]... sourcekeys);
 
   Response<Long> pfcount(final byte[]... keys);
+
+  Response<byte[]> dump(byte[] key);
+
+  Response<String> restore(byte[] key, int ttl, byte[] serializedValue);
+
+  Response<String> migrate(byte[] host, int port, byte[] key, int destinationDb, int timeout);
+
+  Response<Long> objectRefcount(byte[] key);
+
+  Response<byte[]> objectEncoding(byte[] key);
+
+  Response<Long> objectIdletime(byte[] key);
 }

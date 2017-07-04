@@ -225,6 +225,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * @param params
    * @return Status code reply
    */
+  @Override
   public String set(final byte[] key, final byte[] value, final SetParams params) {
     checkIsInMultiOrPipeline();
     client.set(key, value, params);
@@ -266,6 +267,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * @return Integer reply, specifically: an integer greater than 0 if one or more keys existed 0 if
    *         none of the specified keys existed
    */
+  @Override
   public Long exists(final byte[]... keys) {
     checkIsInMultiOrPipeline();
     client.exists(keys);
@@ -1797,7 +1799,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
   protected void checkIsInMultiOrPipeline() {
     if (client.isInMulti()) {
       throw new JedisDataException(
-          "Cannot use Jedis when in Multi. Please use Transation or reset jedis state.");
+          "Cannot use Jedis when in Multi. Please use Transaction or reset jedis state.");
     } else if (pipeline != null && pipeline.hasPipelinedResponse()) {
       throw new JedisDataException(
           "Cannot use Jedis when in Pipeline. Please use Pipeline or reset jedis state .");
@@ -2975,6 +2977,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     return client.getIntegerReply();
   }
 
+  @Override
   public void sync() {
     client.sync();
   }
@@ -3077,10 +3080,12 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     return client.getIntegerReply() == 1;
   }
 
+  @Override
   public Long bitpos(final byte[] key, final boolean value) {
     return bitpos(key, value, new BitPosParams());
   }
 
+  @Override
   public Long bitpos(final byte[] key, final boolean value, final BitPosParams params) {
     client.bitpos(key, value, params);
     return client.getIntegerReply();
@@ -3285,12 +3290,14 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     return client.getIntegerReply();
   }
 
+  @Override
   public byte[] dump(final byte[] key) {
     checkIsInMultiOrPipeline();
     client.dump(key);
     return client.getBinaryBulkReply();
   }
 
+  @Override
   public String restore(final byte[] key, final int ttl, final byte[] serializedValue) {
     checkIsInMultiOrPipeline();
     client.restore(key, ttl, serializedValue);
@@ -3332,6 +3339,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     return client.getIntegerReply();
   }
 
+  @Override
   public Long pttl(final byte[] key) {
     checkIsInMultiOrPipeline();
     client.pttl(key);
@@ -3346,42 +3354,49 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * @param value
    * @return Status code reply
    */
+  @Override
   public String psetex(final byte[] key, final long milliseconds, final byte[] value) {
     checkIsInMultiOrPipeline();
     client.psetex(key, milliseconds, value);
     return client.getStatusCodeReply();
   }
 
+  @Override
   public String clientKill(final byte[] client) {
     checkIsInMultiOrPipeline();
     this.client.clientKill(client);
     return this.client.getStatusCodeReply();
   }
 
+  @Override
   public String clientGetname() {
     checkIsInMultiOrPipeline();
     client.clientGetname();
     return client.getBulkReply();
   }
 
+  @Override
   public String clientList() {
     checkIsInMultiOrPipeline();
     client.clientList();
     return client.getBulkReply();
   }
 
+  @Override
   public String clientSetname(final byte[] name) {
     checkIsInMultiOrPipeline();
     client.clientSetname(name);
     return client.getBulkReply();
   }
 
+  @Override
   public List<String> time() {
     checkIsInMultiOrPipeline();
     client.time();
     return client.getMultiBulkReply();
   }
 
+  @Override
   public String migrate(final byte[] host, final int port, final byte[] key,
       final int destinationDb, final int timeout) {
     checkIsInMultiOrPipeline();
@@ -3429,10 +3444,12 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     return client.getIntegerReply();
   }
 
+  @Override
   public ScanResult<byte[]> scan(final byte[] cursor) {
     return scan(cursor, new ScanParams());
   }
 
+  @Override
   public ScanResult<byte[]> scan(final byte[] cursor, final ScanParams params) {
     checkIsInMultiOrPipeline();
     client.scan(cursor, params);

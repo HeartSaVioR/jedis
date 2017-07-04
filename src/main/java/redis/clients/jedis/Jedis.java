@@ -23,6 +23,7 @@ import redis.clients.jedis.commands.ClusterCommands;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.commands.ModuleCommands;
 import redis.clients.jedis.commands.MultiKeyCommands;
+import redis.clients.jedis.commands.PubsubCommands;
 import redis.clients.jedis.commands.ScriptingCommands;
 import redis.clients.jedis.commands.SentinelCommands;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
@@ -33,7 +34,8 @@ import redis.clients.util.SafeEncoder;
 import redis.clients.util.Slowlog;
 
 public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommands,
-    AdvancedJedisCommands, ScriptingCommands, BasicCommands, ClusterCommands, SentinelCommands, ModuleCommands {
+    AdvancedJedisCommands, ScriptingCommands, BasicCommands, ClusterCommands,
+    SentinelCommands, PubsubCommands, ModuleCommands {
 
   protected JedisPoolAbstract dataSource = null;
 
@@ -142,6 +144,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
    *          key if it already exist. EX|PX, expire time units: EX = seconds; PX = milliseconds
    * @return Status code reply
    */
+  @Override
   public String set(final String key, final String value, final SetParams params) {
     checkIsInMultiOrPipeline();
     client.set(key, value, params);
@@ -170,6 +173,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
    * @return Integer reply, specifically: an integer greater than 0 if one or more keys were removed
    *         0 if none of the specified key existed
    */
+  @Override
   public Long exists(final String... keys) {
     checkIsInMultiOrPipeline();
     client.exists(keys);
@@ -3065,12 +3069,14 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return client.getStatusCodeReply();
   }
 
+  @Override
   public byte[] dump(final String key) {
     checkIsInMultiOrPipeline();
     client.dump(key);
     return client.getBinaryBulkReply();
   }
 
+  @Override
   public String restore(final String key, final int ttl, final byte[] serializedValue) {
     checkIsInMultiOrPipeline();
     client.restore(key, ttl, serializedValue);
@@ -3114,18 +3120,21 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return client.getStatusCodeReply();
   }
 
+  @Override
   public String clientKill(final String client) {
     checkIsInMultiOrPipeline();
     this.client.clientKill(client);
     return this.client.getStatusCodeReply();
   }
 
+  @Override
   public String clientSetname(final String name) {
     checkIsInMultiOrPipeline();
     client.clientSetname(name);
     return client.getStatusCodeReply();
   }
 
+  @Override
   public String migrate(final String host, final int port, final String key,
       final int destinationDb, final int timeout) {
     checkIsInMultiOrPipeline();
@@ -3366,18 +3375,21 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return client.getStatusCodeReply();
   }
 
+  @Override
   public List<String> pubsubChannels(String pattern) {
     checkIsInMultiOrPipeline();
     client.pubsubChannels(pattern);
     return client.getMultiBulkReply();
   }
 
+  @Override
   public Long pubsubNumPat() {
     checkIsInMultiOrPipeline();
     client.pubsubNumPat();
     return client.getIntegerReply();
   }
 
+  @Override
   public Map<String, String> pubsubNumSub(String... channels) {
     checkIsInMultiOrPipeline();
     client.pubsubNumSub(channels);

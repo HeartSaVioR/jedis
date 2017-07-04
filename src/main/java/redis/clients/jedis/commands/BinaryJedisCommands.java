@@ -37,11 +37,17 @@ public interface BinaryJedisCommands {
 
   Long ttl(byte[] key);
 
+  Long pttl(final byte[] key);
+
   Boolean setbit(byte[] key, long offset, boolean value);
 
   Boolean setbit(byte[] key, long offset, byte[] value);
 
   Boolean getbit(byte[] key, long offset);
+
+  Long bitpos(final byte[] key, final boolean value);
+
+  Long bitpos(final byte[] key, final boolean value, final BitPosParams params);
 
   Long setrange(byte[] key, long offset, byte[] value);
 
@@ -52,6 +58,8 @@ public interface BinaryJedisCommands {
   Long setnx(byte[] key, byte[] value);
 
   String setex(byte[] key, int seconds, byte[] value);
+
+  String psetex(final byte[] key, final long milliseconds, final byte[] value);
 
   Long decrBy(byte[] key, long integer);
 
@@ -268,6 +276,10 @@ public interface BinaryJedisCommands {
   List<GeoRadiusResponse> georadiusByMember(byte[] key, byte[] member, double radius, GeoUnit unit,
       GeoRadiusParam param);
 
+  ScanResult<byte[]> scan(final byte[] cursor);
+
+  ScanResult<byte[]> scan(final byte[] cursor, final ScanParams params);
+
   ScanResult<Map.Entry<byte[], byte[]>> hscan(byte[] key, byte[] cursor);
 
   ScanResult<Map.Entry<byte[], byte[]>> hscan(byte[] key, byte[] cursor, ScanParams params);
@@ -295,4 +307,18 @@ public interface BinaryJedisCommands {
    */
   Long hstrlen(final byte[] key, final byte[] field);
 
+  byte[] dump(final byte[] key);
+
+  String restore(final byte[] key, final int ttl, final byte[] serializedValue);
+
+  String migrate(final byte[] host, final int port, final byte[] key,
+      final int destinationDb, final int timeout);
+
+  String clientKill(final byte[] client);
+
+  String clientGetname();
+
+  String clientList();
+
+  String clientSetname(final byte[] name);
 }

@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
+import redis.clients.jedis.commands.PipelineBasicCommands;
+import redis.clients.jedis.commands.PipelineBinaryScriptingCommands;
+import redis.clients.jedis.commands.PipelineClusterCommands;
+import redis.clients.jedis.commands.PipelineScriptingCommands;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 import redis.clients.jedis.commands.PipelineBinaryJedisCommands;
 import redis.clients.jedis.commands.PipelineJedisCommands;
@@ -12,8 +16,9 @@ import redis.clients.jedis.params.set.SetParams;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
 
-public abstract class PipelineBase extends Queable implements PipelineBinaryJedisCommands,
-    PipelineJedisCommands {
+public abstract class PipelineBase extends Queable implements PipelineBasicCommands,
+    PipelineBinaryJedisCommands, PipelineJedisCommands, PipelineClusterCommands,
+    PipelineBinaryScriptingCommands, PipelineScriptingCommands {
 
   protected abstract Client getClient();
 
@@ -161,19 +166,25 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.BOOLEAN);
   }
 
+  @Override
   public Response<Long> bitpos(final String key, final boolean value) {
-    return bitpos(key, value, new BitPosParams());
+    getClient().bitpos(key, value);
+    return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> bitpos(final String key, final boolean value, final BitPosParams params) {
     getClient().bitpos(key, value, params);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> bitpos(final byte[] key, final boolean value) {
-    return bitpos(key, value, new BitPosParams());
+    getClient().bitpos(key, value);
+    return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> bitpos(final byte[] key, final boolean value, final BitPosParams params) {
     getClient().bitpos(key, value, params);
     return getResponse(BuilderFactory.LONG);
@@ -611,11 +622,13 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> set(String key, String value, SetParams params) {
     getClient().set(key, value, params);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> set(byte[] key, byte[] value, SetParams params) {
     getClient().set(key, value, params);
     return getResponse(BuilderFactory.STRING);
@@ -1361,51 +1374,61 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<byte[]> dump(String key) {
     getClient().dump(key);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<byte[]> dump(byte[] key) {
     getClient().dump(key);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<String> migrate(String host, int port, String key, int destinationDb, int timeout) {
     getClient().migrate(host, port, key, destinationDb, timeout);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> migrate(byte[] host, int port, byte[] key, int destinationDb, int timeout) {
     getClient().migrate(host, port, key, destinationDb, timeout);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> objectRefcount(String key) {
     getClient().objectRefcount(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> objectRefcount(byte[] key) {
     getClient().objectRefcount(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> objectEncoding(String key) {
     getClient().objectEncoding(key);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<byte[]> objectEncoding(byte[] key) {
     getClient().objectEncoding(key);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<Long> objectIdletime(String key) {
     getClient().objectIdletime(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> objectIdletime(byte[] key) {
     getClient().objectIdletime(key);
     return getResponse(BuilderFactory.LONG);
@@ -1435,51 +1458,61 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> pttl(String key) {
     getClient().pttl(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> pttl(byte[] key) {
     getClient().pttl(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> restore(String key, int ttl, byte[] serializedValue) {
     getClient().restore(key, ttl, serializedValue);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> restore(byte[] key, int ttl, byte[] serializedValue) {
     getClient().restore(key, ttl, serializedValue);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Double> incrByFloat(String key, double increment) {
     getClient().incrByFloat(key, increment);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
+  @Override
   public Response<Double> incrByFloat(byte[] key, double increment) {
     getClient().incrByFloat(key, increment);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
+  @Override
   public Response<String> psetex(String key, long milliseconds, String value) {
     getClient().psetex(key, milliseconds, value);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> psetex(byte[] key, long milliseconds, byte[] value) {
     getClient().psetex(key, milliseconds, value);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Double> hincrByFloat(String key, String field, double increment) {
     getClient().hincrByFloat(key, field, increment);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
+  @Override
   public Response<Double> hincrByFloat(byte[] key, byte[] field, double increment) {
     getClient().hincrByFloat(key, field, increment);
     return getResponse(BuilderFactory.DOUBLE);
@@ -1511,376 +1544,427 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
 
   // multi key operations
 
-  public Response<List<String>> brpop(String... args) {
-    getClient().brpop(args);
-    return getResponse(BuilderFactory.STRING_LIST);
-  }
-
+  @Override
   public Response<List<String>> brpop(int timeout, String... keys) {
     getClient().brpop(timeout, keys);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
-  public Response<List<String>> blpop(String... args) {
-    getClient().blpop(args);
-    return getResponse(BuilderFactory.STRING_LIST);
-  }
-
+  @Override
   public Response<List<String>> blpop(int timeout, String... keys) {
     getClient().blpop(timeout, keys);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
-  public Response<Map<String, String>> blpopMap(int timeout, String... keys) {
-    getClient().blpop(timeout, keys);
-    return getResponse(BuilderFactory.STRING_MAP);
-  }
-
+  @Override
   public Response<List<byte[]>> brpop(int timeout, byte[]... keys) {
     getClient().brpop(timeout, keys);
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
-  public Response<Map<String, String>> brpopMap(int timeout, String... keys) {
-    getClient().brpop(timeout, keys);
-    return getResponse(BuilderFactory.STRING_MAP);
-  }
-
+  @Override
   public Response<List<byte[]>> blpop(int timeout, byte[]... keys) {
     getClient().blpop(timeout, keys);
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
+  @Override
   public Response<Long> del(String... keys) {
     getClient().del(keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> del(byte[]... keys) {
     getClient().del(keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> exists(String... keys) {
     getClient().exists(keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> exists(byte[]... keys) {
     getClient().exists(keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Set<String>> keys(String pattern) {
     getClient().keys(pattern);
     return getResponse(BuilderFactory.STRING_SET);
   }
 
+  @Override
   public Response<Set<byte[]>> keys(byte[] pattern) {
     getClient().keys(pattern);
     return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
+  @Override
   public Response<List<String>> mget(String... keys) {
     getClient().mget(keys);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
+  @Override
   public Response<List<byte[]>> mget(byte[]... keys) {
     getClient().mget(keys);
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
+  @Override
   public Response<String> mset(String... keysvalues) {
     getClient().mset(keysvalues);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> mset(byte[]... keysvalues) {
     getClient().mset(keysvalues);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> msetnx(String... keysvalues) {
     getClient().msetnx(keysvalues);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> msetnx(byte[]... keysvalues) {
     getClient().msetnx(keysvalues);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> rename(String oldkey, String newkey) {
     getClient().rename(oldkey, newkey);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> rename(byte[] oldkey, byte[] newkey) {
     getClient().rename(oldkey, newkey);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> renamenx(String oldkey, String newkey) {
     getClient().renamenx(oldkey, newkey);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> renamenx(byte[] oldkey, byte[] newkey) {
     getClient().renamenx(oldkey, newkey);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> rpoplpush(String srckey, String dstkey) {
     getClient().rpoplpush(srckey, dstkey);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<byte[]> rpoplpush(byte[] srckey, byte[] dstkey) {
     getClient().rpoplpush(srckey, dstkey);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<Set<String>> sdiff(String... keys) {
     getClient().sdiff(keys);
     return getResponse(BuilderFactory.STRING_SET);
   }
 
+  @Override
   public Response<Set<byte[]>> sdiff(byte[]... keys) {
     getClient().sdiff(keys);
     return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
+  @Override
   public Response<Long> sdiffstore(String dstkey, String... keys) {
     getClient().sdiffstore(dstkey, keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sdiffstore(byte[] dstkey, byte[]... keys) {
     getClient().sdiffstore(dstkey, keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Set<String>> sinter(String... keys) {
     getClient().sinter(keys);
     return getResponse(BuilderFactory.STRING_SET);
   }
 
+  @Override
   public Response<Set<byte[]>> sinter(byte[]... keys) {
     getClient().sinter(keys);
     return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
+  @Override
   public Response<Long> sinterstore(String dstkey, String... keys) {
     getClient().sinterstore(dstkey, keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sinterstore(byte[] dstkey, byte[]... keys) {
     getClient().sinterstore(dstkey, keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> smove(String srckey, String dstkey, String member) {
     getClient().smove(srckey, dstkey, member);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> smove(byte[] srckey, byte[] dstkey, byte[] member) {
     getClient().smove(srckey, dstkey, member);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sort(String key, SortingParams sortingParameters, String dstkey) {
     getClient().sort(key, sortingParameters, dstkey);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sort(byte[] key, SortingParams sortingParameters, byte[] dstkey) {
     getClient().sort(key, sortingParameters, dstkey);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sort(String key, String dstkey) {
     getClient().sort(key, dstkey);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sort(byte[] key, byte[] dstkey) {
     getClient().sort(key, dstkey);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Set<String>> sunion(String... keys) {
     getClient().sunion(keys);
     return getResponse(BuilderFactory.STRING_SET);
   }
 
+  @Override
   public Response<Set<byte[]>> sunion(byte[]... keys) {
     getClient().sunion(keys);
     return getResponse(BuilderFactory.BYTE_ARRAY_ZSET);
   }
 
+  @Override
   public Response<Long> sunionstore(String dstkey, String... keys) {
     getClient().sunionstore(dstkey, keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> sunionstore(byte[] dstkey, byte[]... keys) {
     getClient().sunionstore(dstkey, keys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> watch(String... keys) {
     getClient().watch(keys);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> watch(byte[]... keys) {
     getClient().watch(keys);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> zinterstore(String dstkey, String... sets) {
     getClient().zinterstore(dstkey, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zinterstore(byte[] dstkey, byte[]... sets) {
     getClient().zinterstore(dstkey, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zinterstore(String dstkey, ZParams params, String... sets) {
     getClient().zinterstore(dstkey, params, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zinterstore(byte[] dstkey, ZParams params, byte[]... sets) {
     getClient().zinterstore(dstkey, params, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zunionstore(String dstkey, String... sets) {
     getClient().zunionstore(dstkey, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zunionstore(byte[] dstkey, byte[]... sets) {
     getClient().zunionstore(dstkey, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zunionstore(String dstkey, ZParams params, String... sets) {
     getClient().zunionstore(dstkey, params, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> zunionstore(byte[] dstkey, ZParams params, byte[]... sets) {
     getClient().zunionstore(dstkey, params, sets);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> bgrewriteaof() {
     getClient().bgrewriteaof();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> bgsave() {
     getClient().bgsave();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<List<String>> configGet(String pattern) {
     getClient().configGet(pattern);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
+  @Override
   public Response<String> configSet(String parameter, String value) {
     getClient().configSet(parameter, value);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> brpoplpush(String source, String destination, int timeout) {
     getClient().brpoplpush(source, destination, timeout);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<byte[]> brpoplpush(byte[] source, byte[] destination, int timeout) {
     getClient().brpoplpush(source, destination, timeout);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<String> configResetStat() {
     getClient().configResetStat();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> save() {
     getClient().save();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> lastsave() {
     getClient().lastsave();
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> publish(String channel, String message) {
     getClient().publish(channel, message);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> publish(byte[] channel, byte[] message) {
     getClient().publish(channel, message);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> randomKey() {
     getClient().randomKey();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<byte[]> randomKeyBinary() {
     getClient().randomKeyBinary();
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<String> flushDB() {
     getClient().flushDB();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> flushAll() {
     getClient().flushAll();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> info() {
     getClient().info();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> info(final String section) {
     getClient().info(section);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> dbSize() {
     getClient().dbSize();
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> shutdown() {
     getClient().shutdown();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> ping() {
     getClient().ping();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> select(int index) {
     getClient().select(index);
     Response<String> response = getResponse(BuilderFactory.STRING);
@@ -1889,6 +1973,7 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return response;
   }
 
+  @Override
   public Response<Long> bitop(BitOP op, byte[] destKey, byte[]... srcKeys) {
     getClient().bitop(op, destKey, srcKeys);
     return getResponse(BuilderFactory.LONG);
@@ -2022,112 +2107,139 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
   }
 
+  @Override
   public Response<Long> bitop(BitOP op, String destKey, String... srcKeys) {
     getClient().bitop(op, destKey, srcKeys);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> clusterNodes() {
     getClient().clusterNodes();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> clusterMeet(final String ip, final int port) {
     getClient().clusterMeet(ip, port);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> clusterAddSlots(final int... slots) {
     getClient().clusterAddSlots(slots);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> clusterDelSlots(final int... slots) {
     getClient().clusterDelSlots(slots);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> clusterInfo() {
     getClient().clusterInfo();
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<List<String>> clusterGetKeysInSlot(final int slot, final int count) {
     getClient().clusterGetKeysInSlot(slot, count);
     return getResponse(BuilderFactory.STRING_LIST);
   }
 
+  @Override
   public Response<String> clusterSetSlotNode(final int slot, final String nodeId) {
     getClient().clusterSetSlotNode(slot, nodeId);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> clusterSetSlotMigrating(final int slot, final String nodeId) {
     getClient().clusterSetSlotMigrating(slot, nodeId);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> clusterSetSlotImporting(final int slot, final String nodeId) {
     getClient().clusterSetSlotImporting(slot, nodeId);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Object> eval(String script) {
-    return this.eval(script, 0, new String[0]);
+    getClient().eval(script);
+    return getResponse(BuilderFactory.EVAL_RESULT);
   }
 
+  @Override
   public Response<Object> eval(String script, List<String> keys, List<String> args) {
-    String[] argv = Jedis.getParams(keys, args);
-    return this.eval(script, keys.size(), argv);
+    getClient().eval(script, keys, args);
+    return getResponse(BuilderFactory.EVAL_RESULT);
   }
 
+  @Override
   public Response<Object> eval(String script, int keyCount, String... params) {
     getClient().eval(script, keyCount, params);
     return getResponse(BuilderFactory.EVAL_RESULT);
   }
 
+  @Override
   public Response<Object> evalsha(String script) {
-    return this.evalsha(script, 0, new String[0]);
+    getClient().evalsha(script);
+    return getResponse(BuilderFactory.EVAL_RESULT);
   }
 
+  @Override
   public Response<Object> evalsha(String sha1, List<String> keys, List<String> args) {
-    String[] argv = Jedis.getParams(keys, args);
-    return this.evalsha(sha1, keys.size(), argv);
+    getClient().evalsha(sha1, keys, args);
+    return getResponse(BuilderFactory.EVAL_RESULT);
   }
 
+  @Override
   public Response<Object> evalsha(String sha1, int keyCount, String... params) {
     getClient().evalsha(sha1, keyCount, params);
     return getResponse(BuilderFactory.EVAL_RESULT);
   }
 
+  @Override
   public Response<Object> eval(byte[] script) {
-    return this.eval(script, 0);
+    getClient().eval(script);
+    return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
   }
 
+  @Override
   public Response<Object> eval(byte[] script, byte[] keyCount, byte[]... params) {
     getClient().eval(script, keyCount, params);
     return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
   }
 
+  @Override
   public Response<Object> eval(byte[] script, List<byte[]> keys, List<byte[]> args) {
-    byte[][] argv = BinaryJedis.getParamsWithBinary(keys, args);
-    return this.eval(script, keys.size(), argv);
+    getClient().eval(script, keys, args);
+    return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
   }
 
+  @Override
   public Response<Object> eval(byte[] script, int keyCount, byte[]... params) {
     getClient().eval(script, keyCount, params);
     return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
   }
 
+  @Override
   public Response<Object> evalsha(byte[] sha1) {
-    return this.evalsha(sha1, 0);
+    getClient().evalsha(sha1);
+    return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
   }
 
+  @Override
   public Response<Object> evalsha(byte[] sha1, List<byte[]> keys, List<byte[]> args) {
-    byte[][] argv = BinaryJedis.getParamsWithBinary(keys, args);
-    return this.evalsha(sha1, keys.size(), argv);
+    getClient().evalsha(sha1, keys, args);
+    return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
   }
 
+  @Override
   public Response<Object> evalsha(byte[] sha1, int keyCount, byte[]... params) {
     getClient().evalsha(sha1, keyCount, params);
     return getResponse(BuilderFactory.EVAL_BINARY_RESULT);
@@ -2157,4 +2269,27 @@ public abstract class PipelineBase extends Queable implements PipelineBinaryJedi
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
+  public Response<List<String>> time() {
+    getClient().time();
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  @Override
+  public Response<String> moduleLoad(String path) {
+    getClient().moduleLoad(path);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<List<Module>> moduleList() {
+    getClient().moduleList();
+    return getResponse(BuilderFactory.MODULE_LIST);
+  }
+
+  @Override
+  public Response<String> moduleUnload(String name) {
+    getClient().moduleUnload(name);
+    return getResponse(BuilderFactory.STRING);
+  }
 }
