@@ -509,15 +509,6 @@ public class Client extends BinaryClient implements Commands {
     sort(SafeEncoder.encode(key), sortingParameters);
   }
 
-  @Override
-  public void blpop(final String[] args) {
-    final byte[][] bargs = new byte[args.length][];
-    for (int i = 0; i < bargs.length; i++) {
-      bargs[i] = SafeEncoder.encode(args[i]);
-    }
-    blpop(bargs);
-  }
-
   public void blpop(final int timeout, final String... keys) {
     final int size = keys.length + 1;
     List<String> args = new ArrayList<String>(size);
@@ -536,15 +527,6 @@ public class Client extends BinaryClient implements Commands {
   @Override
   public void sort(final String key, final String dstkey) {
     sort(SafeEncoder.encode(key), SafeEncoder.encode(dstkey));
-  }
-
-  @Override
-  public void brpop(final String[] args) {
-    final byte[][] bargs = new byte[args.length][];
-    for (int i = 0; i < bargs.length; i++) {
-      bargs[i] = SafeEncoder.encode(args[i]);
-    }
-    brpop(bargs);
   }
 
   public void brpop(final int timeout, final String... keys) {
@@ -1233,6 +1215,22 @@ public class Client extends BinaryClient implements Commands {
   @Override
   public void hstrlen(final String key, final String field) {
     hstrlen(SafeEncoder.encode(key), SafeEncoder.encode(field));
+  }
+
+  public void blpop(final String[] args) {
+    final byte[][] bargs = new byte[args.length][];
+    for (int i = 0; i < bargs.length; i++) {
+      bargs[i] = SafeEncoder.encode(args[i]);
+    }
+    blpop(bargs);
+  }
+
+  public void brpop(final String[] args) {
+    final byte[][] bargs = new byte[args.length][];
+    for (int i = 0; i < bargs.length; i++) {
+      bargs[i] = SafeEncoder.encode(args[i]);
+    }
+    brpop(bargs);
   }
 
 }

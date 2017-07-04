@@ -2018,16 +2018,6 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     return blpop(getArgsAddTimeout(timeout, keys));
   }
 
-  private byte[][] getArgsAddTimeout(int timeout, byte[][] keys) {
-    int size = keys.length;
-    final byte[][] args = new byte[size + 1][];
-    for (int at = 0; at != size; ++at) {
-      args[at] = keys[at];
-    }
-    args[size] = Protocol.toByteArray(timeout);
-    return args;
-  }
-
   /**
    * Sort a Set or a List accordingly to the specified parameters and store the result at dstkey.
    * @see #sort(byte[], SortingParams)
@@ -2130,30 +2120,6 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
   @Override
   public List<byte[]> brpop(final int timeout, final byte[]... keys) {
     return brpop(getArgsAddTimeout(timeout, keys));
-  }
-
-  @Override
-  public List<byte[]> blpop(byte[]... args) {
-    checkIsInMultiOrPipeline();
-    client.blpop(args);
-    client.setTimeoutInfinite();
-    try {
-      return client.getBinaryMultiBulkReply();
-    } finally {
-      client.rollbackTimeout();
-    }
-  }
-
-  @Override
-  public List<byte[]> brpop(byte[]... args) {
-    checkIsInMultiOrPipeline();
-    client.brpop(args);
-    client.setTimeoutInfinite();
-    try {
-      return client.getBinaryMultiBulkReply();
-    } finally {
-      client.rollbackTimeout();
-    }
   }
 
   /**
@@ -3732,4 +3698,37 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     client.hstrlen(key, field);
     return client.getIntegerReply();
   }
+
+  private List<byte[]> blpop(byte[]... args) {
+    checkIsInMultiOrPipeline();
+    client.blpop(args);
+    client.setTimeoutInfinite();
+    try {
+      return client.getBinaryMultiBulkReply();
+    } finally {
+      client.rollbackTimeout();
+    }
+  }
+
+  private List<byte[]> brpop(byte[]... args) {
+    checkIsInMultiOrPipeline();
+    client.brpop(args);
+    client.setTimeoutInfinite();
+    try {
+      return client.getBinaryMultiBulkReply();
+    } finally {
+      client.rollbackTimeout();
+    }
+  }
+
+  private byte[][] getArgsAddTimeout(int timeout, byte[][] keys) {
+    int size = keys.length;
+    final byte[][] args = new byte[size + 1][];
+    for (int at = 0; at != size; ++at) {
+      args[at] = keys[at];
+    }
+    args[size] = Protocol.toByteArray(timeout);
+    return args;
+  }
+
 }

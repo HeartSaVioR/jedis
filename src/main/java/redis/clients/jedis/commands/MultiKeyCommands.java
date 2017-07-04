@@ -14,10 +14,6 @@ public interface MultiKeyCommands {
 
   List<String> brpop(int timeout, String... keys);
 
-  List<String> blpop(String... args);
-
-  List<String> brpop(String... args);
-
   /**
    * Returns all the keys matching the glob-style pattern. For example if
    * you have in the database the keys "foo" and "foobar" the command "KEYS foo*" will return

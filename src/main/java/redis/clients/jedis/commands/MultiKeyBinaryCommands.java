@@ -17,10 +17,6 @@ public interface MultiKeyBinaryCommands {
 
   List<byte[]> brpop(int timeout, byte[]... keys);
 
-  List<byte[]> blpop(byte[]... args);
-
-  List<byte[]> brpop(byte[]... args);
-
   Set<byte[]> keys(byte[] pattern);
 
   List<byte[]> mget(byte[]... keys);

@@ -13,9 +13,9 @@ import java.util.Set;
 public interface PipelineBinaryJedisCommands {
   Response<Long> append(byte[] key, byte[] value);
 
-  Response<List<byte[]>> blpop(byte[] arg);
+  Response<List<byte[]>> blpop(int timeout, byte[] arg);
 
-  Response<List<byte[]>> brpop(byte[] arg);
+  Response<List<byte[]>> brpop(int timeout, byte[] arg);
 
   Response<Long> decr(byte[] key);
 
@@ -273,9 +273,9 @@ public interface PipelineBinaryJedisCommands {
 
   Response<Long> exists(byte[]... keys);
 
-  Response<List<byte[]>> blpop(byte[]... args);
+  Response<List<byte[]>> blpop(int timeout, byte[]... args);
 
-  Response<List<byte[]>> brpop(byte[]... args);
+  Response<List<byte[]>> brpop(int timeout, byte[]... args);
 
   Response<Set<byte[]>> keys(byte[] pattern);
 

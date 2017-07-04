@@ -20,9 +20,9 @@ import java.util.Set;
 public interface PipelineJedisCommands {
   Response<Long> append(String key, String value);
 
-  Response<List<String>> blpop(String arg);
+  Response<List<String>> blpop(int timeout, String arg);
 
-  Response<List<String>> brpop(String arg);
+  Response<List<String>> brpop(int timeout, String arg);
 
   Response<Long> decr(String key);
 
@@ -262,9 +262,9 @@ public interface PipelineJedisCommands {
 
   Response<Long> exists(String... keys);
 
-  Response<List<String>> blpop(String... args);
+  Response<List<String>> blpop(int timeout, String... args);
 
-  Response<List<String>> brpop(String... args);
+  Response<List<String>> brpop(int timeout, String... args);
 
   Response<Set<String>> keys(String pattern);
 

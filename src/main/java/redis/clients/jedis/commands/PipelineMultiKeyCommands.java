@@ -16,9 +16,9 @@ public interface PipelineMultiKeyCommands {
 
   Response<Long> exists(String... keys);
 
-  Response<List<String>> blpop(String... args);
+  Response<List<String>> blpop(int timeout, String... args);
 
-  Response<List<String>> brpop(String... args);
+  Response<List<String>> brpop(int timeout, String... args);
 
   Response<Set<String>> keys(String pattern);
 
