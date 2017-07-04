@@ -772,6 +772,10 @@ public class Client extends BinaryClient implements Commands {
     getbit(SafeEncoder.encode(key), offset);
   }
 
+  public void bitpos(final String key, final boolean value) {
+    bitpos(key, value, new BitPosParams());
+  }
+
   public void bitpos(final String key, final boolean value, final BitPosParams params) {
     bitpos(SafeEncoder.encode(key), value, params);
   }

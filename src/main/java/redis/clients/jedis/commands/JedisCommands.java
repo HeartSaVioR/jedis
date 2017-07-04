@@ -306,4 +306,15 @@ public interface JedisCommands {
    * @return lenth of the value for key
    */
   Long hstrlen(final String key, final String field);
+
+  byte[] dump(final String key);
+
+  String restore(final String key, final int ttl, final byte[] serializedValue);
+
+  String migrate(final String host, final int port, final String key,
+      final int destinationDb, final int timeout);
+
+  String clientKill(final String client);
+
+  String clientSetname(final String name);
 }

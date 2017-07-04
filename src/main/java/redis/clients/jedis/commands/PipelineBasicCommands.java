@@ -30,6 +30,8 @@ public interface PipelineBasicCommands {
 
   Response<String> info();
 
+  Response<String> info(final String section);
+
   Response<List<String>> time();
 
   Response<Long> dbSize();

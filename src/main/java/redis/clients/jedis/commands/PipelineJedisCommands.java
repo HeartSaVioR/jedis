@@ -2,6 +2,7 @@ package redis.clients.jedis.commands;
 
 import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.BitOP;
+import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.GeoUnit;
@@ -10,6 +11,7 @@ import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.Tuple;
 import redis.clients.jedis.ZParams;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
+import redis.clients.jedis.params.set.SetParams;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
 
@@ -46,6 +48,10 @@ public interface PipelineJedisCommands {
 
   Response<Boolean> getbit(String key, long offset);
 
+  Response<Long> bitpos(final String key, final boolean value);
+
+  Response<Long> bitpos(final String key, final boolean value, final BitPosParams params);
+
   Response<String> getrange(String key, long startOffset, long endOffset);
 
   Response<String> getSet(String key, String value);
@@ -59,6 +65,8 @@ public interface PipelineJedisCommands {
   Response<Map<String, String>> hgetAll(String key);
 
   Response<Long> hincrBy(String key, String field, long value);
+
+  Response<Double> hincrByFloat(String key, String field, double increment);
 
   Response<Set<String>> hkeys(String key);
 
@@ -77,6 +85,8 @@ public interface PipelineJedisCommands {
   Response<Long> incr(String key);
 
   Response<Long> incrBy(String key, long integer);
+
+  Response<Double> incrByFloat(String key, double increment);
 
   Response<String> lindex(String key, long index);
 
@@ -116,9 +126,13 @@ public interface PipelineJedisCommands {
 
   Response<String> set(String key, String value);
 
+  Response<String> set(byte[] key, byte[] value, SetParams params);
+
   Response<Boolean> setbit(String key, long offset, boolean value);
 
   Response<String> setex(String key, int seconds, String value);
+
+  Response<String> psetex(String key, long milliseconds, String value);
 
   Response<Long> setnx(String key, String value);
 
@@ -143,6 +157,8 @@ public interface PipelineJedisCommands {
   Response<String> substr(String key, int start, int end);
 
   Response<Long> ttl(String key);
+
+  Response<Long> pttl(String key);
 
   Response<String> type(String key);
 
@@ -319,4 +335,16 @@ public interface PipelineJedisCommands {
   Response<String> pfmerge(final String destkey, final String... sourcekeys);
 
   Response<Long> pfcount(final String... keys);
+
+  Response<byte[]> dump(String key);
+
+  Response<String> restore(String key, int ttl, byte[] serializedValue);
+
+  Response<String> migrate(String host, int port, String key, int destinationDb, int timeout);
+
+  Response<Long> objectRefcount(String key);
+
+  Response<String> objectEncoding(String key);
+
+  Response<Long> objectIdletime(String key);
 }

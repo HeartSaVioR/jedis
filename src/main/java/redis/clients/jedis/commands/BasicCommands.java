@@ -2,6 +2,8 @@ package redis.clients.jedis.commands;
 
 import redis.clients.jedis.DebugParams;
 
+import java.util.List;
+
 public interface BasicCommands {
 
   /**
@@ -125,7 +127,11 @@ public interface BasicCommands {
 
   String debug(DebugParams params);
 
+  void sync();
+
   String configResetStat();
 
   Long waitReplicas(int replicas, long timeout);
+
+  List<String> time();
 }

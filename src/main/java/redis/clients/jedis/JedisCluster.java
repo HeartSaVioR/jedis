@@ -1221,7 +1221,7 @@ public class JedisCluster extends BinaryJedisCluster implements JedisClusterComm
     }.run(key);
   }
 
-    @Override
+  @Override
   public ScanResult<String> scan(final String cursor, final ScanParams params) {
 
     String matchPattern = null;
